@@ -1,6 +1,7 @@
 # 📁 app/clients/service/model_router.py
 
 from fastapi import APIRouter, HTTPException
+
 from app.clients.service import model_registry
 
 router = APIRouter(prefix="/models", tags=["models"])

@@ -1,23 +1,28 @@
 """
 Router module for client-related endpoints.
-Handles all HTTP requests for client operations including create, read, update, and delete.
+Handles all HTTP requests for client operations including 
+create, read, update, and delete.
 """
 
-from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlalchemy.orm import Session
+# from fastapi import APIRouter, Depends, HTTPException, status, Query
 from typing import List, Optional
-from app.auth.router import get_current_user, get_admin_user
-from app.models import User, UserRole
 
-from app.database import get_db
-from app.clients.service.client_service import ClientService
+from fastapi import APIRouter, Depends, Query, status
+from sqlalchemy.orm import Session
+
+from app.auth.router import get_admin_user, get_current_user
 from app.clients.schema import (
+    ClientListResponse,
     ClientResponse,
     ClientUpdate,
-    ClientListResponse,
     ServiceResponse,
     ServiceUpdate,
 )
+from app.clients.service.client_service import ClientService
+from app.database import get_db
+
+# from app.models import User, UserRole
+from app.models import User
 
 router = APIRouter(prefix="/clients", tags=["clients"])
 
@@ -134,7 +139,8 @@ async def get_client_services(
     current_user: User = Depends(get_admin_user),
     db: Session = Depends(get_db),
 ):
-    """Get all services and their status for a specific client, including case worker info"""
+    """Get all services and their status for a specific client, 
+    including case worker info"""
     return ClientService.get_client_services(db, client_id)
 
 

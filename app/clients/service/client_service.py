@@ -3,134 +3,13 @@ Client service module handling all database operations for clients.
 Provides CRUD operations and business logic for client management.
 """
 
-from sqlalchemy.orm import Session
-from sqlalchemy import and_
+from typing import Optional
+
 from fastapi import HTTPException, status
-from typing import List, Optional, Dict, Any
+from sqlalchemy.orm import Session
+
+from app.clients.schema import ClientUpdate, ServiceUpdate
 from app.models import Client, ClientCase, User
-from app.clients.schema import ClientUpdate, ServiceUpdate, ServiceResponse
-
-# # --- Common helpers ---
-# def get_client_or_404(db: Session, client_id: int) -> Client:
-#     client = db.query(Client).filter(Client.id == client_id).first()
-#     if not client:
-#         raise HTTPException(status_code=404, detail=f"Client {client_id} not found")
-#     return client
-
-# def get_user_or_404(db: Session, user_id: int) -> User:
-#     user = db.query(User).filter(User.id == user_id).first()
-#     if not user:
-#         raise HTTPException(status_code=404, detail=f"User {user_id} not found")
-#     return user
-
-# def safe_commit(db: Session):
-#     try:
-#         db.commit()
-#     except Exception as e:
-#         db.rollback()
-#         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
-
-# # --- Services ---
-
-# class ClientQueryService:
-#     @staticmethod
-#     def get_all(db: Session, skip=0, limit=50):
-#         clients = db.query(Client).offset(skip).limit(limit).all()
-#         total = db.query(Client).count()
-#         return {"clients": clients, "total": total}
-
-#     @staticmethod
-#     def get_by_id(db: Session, client_id: int):
-#         return get_client_or_404(db, client_id)
-
-#     @staticmethod
-#     def filter_by_criteria(db: Session, filters: Dict[str, Any]):
-#         query = db.query(Client)
-#         for field, value in filters.items():
-#             if value is not None:
-#                 query = query.filter(getattr(Client, field) == value)
-#         return query.all()
-
-#     @staticmethod
-#     def filter_by_service_status(db: Session, filters: Dict[str, Optional[bool]]):
-#         query = db.query(Client).join(ClientCase)
-#         for field, value in filters.items():
-#             if value is not None:
-#                 query = query.filter(getattr(ClientCase, field) == value)
-#         return query.all()
-
-#     @staticmethod
-#     def get_services(db: Session, client_id: int):
-#         services = db.query(ClientCase).filter(ClientCase.client_id == client_id).all()
-#         if not services:
-#             raise HTTPException(404, detail=f"No services found for client {client_id}")
-#         return services
-
-#     @staticmethod
-#     def filter_by_success_rate(db: Session, min_rate: int):
-#         return db.query(Client).join(ClientCase).filter(ClientCase.success_rate >= min_rate).all()
-
-#     @staticmethod
-#     def filter_by_case_worker(db: Session, case_worker_id: int):
-#         return db.query(Client).join(ClientCase).filter(ClientCase.user_id == case_worker_id).all()
-
-
-# class ClientUpdateService:
-#     @staticmethod
-#     def update_info(db: Session, client_id: int, update: ClientUpdate):
-#         client = get_client_or_404(db, client_id)
-#         for field, value in update.dict(exclude_unset=True).items():
-#             setattr(client, field, value)
-#         safe_commit(db)
-#         db.refresh(client)
-#         return client
-
-#     @staticmethod
-#     def update_services(db: Session, client_id: int, user_id: int, update: ServiceUpdate):
-#         case = db.query(ClientCase).filter(ClientCase.client_id == client_id, ClientCase.user_id == user_id).first()
-#         if not case:
-#             raise HTTPException(404, detail=f"No case found for client {client_id} and worker {user_id}")
-#         for field, value in update.dict(exclude_unset=True).items():
-#             setattr(case, field, value)
-#         safe_commit(db)
-#         db.refresh(case)
-#         return case
-
-
-# class CaseAssignmentService:
-#     @staticmethod
-#     def create(db: Session, client_id: int, user_id: int):
-#         get_client_or_404(db, client_id)
-#         get_user_or_404(db, user_id)
-
-#         existing = db.query(ClientCase).filter_by(client_id=client_id, user_id=user_id).first()
-#         if existing:
-#             raise HTTPException(400, detail="Assignment already exists")
-
-#         new_case = ClientCase(
-#             client_id=client_id, user_id=user_id,
-#             employment_assistance=False,
-#             life_stabilization=False,
-#             retention_services=False,
-#             specialized_services=False,
-#             employment_related_financial_supports=False,
-#             employer_financial_supports=False,
-#             enhanced_referrals=False,
-#             success_rate=0
-#         )
-#         db.add(new_case)
-#         safe_commit(db)
-#         db.refresh(new_case)
-#         return new_case
-
-
-# class ClientDeleteService:
-#     @staticmethod
-#     def delete(db: Session, client_id: int):
-#         client = get_client_or_404(db, client_id)
-#         db.query(ClientCase).filter_by(client_id=client_id).delete()
-#         db.delete(client)
-#         safe_commit(db)
 
 
 class ClientService:
@@ -382,7 +261,7 @@ class ClientService:
         if not client_case:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"No case found for client {client_id} with case worker {user_id}. "
+                detail=f"No case found for client {client_id} with case worker {user_id}."
                 f"Cannot update services for a non-existent case assignment.",
             )
 

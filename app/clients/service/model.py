@@ -4,16 +4,15 @@ Handles the preparation, training, and saving of the prediction model.
 """
 
 # Standard library imports
-import pickle
 import os
+import pickle
 
 # Third-party imports
 import numpy as np
 import pandas as pd
-from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
-
 from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
 from sklearn.svm import SVR
 
 # Paths
@@ -23,16 +22,37 @@ MODEL_DIR = os.path.dirname(__file__)
 def prepare_features_targets():
     data = pd.read_csv(os.path.join(MODEL_DIR, "data_commontool.csv"))
     feature_columns = [
-        "age", "gender", "work_experience", "canada_workex", "dep_num",
-        "canada_born", "citizen_status", "level_of_schooling",
-        "fluent_english", "reading_english_scale", "speaking_english_scale",
-        "writing_english_scale", "numeracy_scale", "computer_scale",
-        "transportation_bool", "caregiver_bool", "housing", "income_source",
-        "felony_bool", "attending_school", "currently_employed", "substance_use",
-        "time_unemployed", "need_mental_health_support_bool",
-        "employment_assistance", "life_stabilization", "retention_services",
-        "specialized_services", "employment_related_financial_supports",
-        "employer_financial_supports", "enhanced_referrals"
+        "age",
+        "gender",
+        "work_experience",
+        "canada_workex",
+        "dep_num",
+        "canada_born",
+        "citizen_status",
+        "level_of_schooling",
+        "fluent_english",
+        "reading_english_scale",
+        "speaking_english_scale",
+        "writing_english_scale",
+        "numeracy_scale",
+        "computer_scale",
+        "transportation_bool",
+        "caregiver_bool",
+        "housing",
+        "income_source",
+        "felony_bool",
+        "attending_school",
+        "currently_employed",
+        "substance_use",
+        "time_unemployed",
+        "need_mental_health_support_bool",
+        "employment_assistance",
+        "life_stabilization",
+        "retention_services",
+        "specialized_services",
+        "employment_related_financial_supports",
+        "employer_financial_supports",
+        "enhanced_referrals",
     ]
     features = np.array(data[feature_columns])
     targets = np.array(data["success_rate"])
@@ -44,7 +64,7 @@ def train_all_models():
     models = {
         "model_rf.pkl": RandomForestRegressor(n_estimators=100, random_state=42),
         "model_lr.pkl": LinearRegression(),
-        "model_svm.pkl": SVR()
+        "model_svm.pkl": SVR(),
     }
     for name, model in models.items():
         model.fit(X_train, y_train)
@@ -75,7 +95,7 @@ if __name__ == "__main__":
 # def prepare_models():
 #     """
 #     Prepare and train the Random Forest model using the dataset.
-    
+
 #     Returns:
 #         RandomForestRegressor: Trained model for predicting success rates
 #     """
@@ -136,7 +156,7 @@ if __name__ == "__main__":
 # def save_model(model, filename="model.pkl"):
 #     """
 #     Save the trained model to a file.
-    
+
 #     Args:
 #         model: Trained model to save
 #         filename (str): Name of the file to save the model to
@@ -148,10 +168,10 @@ if __name__ == "__main__":
 # def load_model(filename="model.pkl"):
 #     """
 #     Load a trained model from a file.
-    
+
 #     Args:
 #         filename (str): Name of the file to load the model from
-    
+
 #     Returns:
 #         The loaded model
 #     """

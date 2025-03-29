@@ -2,13 +2,14 @@
 
 import os
 import pickle
+
 from sklearn.base import BaseEstimator
 
 # All available models (you can expand this)
 MODEL_REGISTRY = {
     "random_forest": "model_rf.pkl",
     "linear_regression": "model_lr.pkl",
-    "svm": "model_svm.pkl"
+    "svm": "model_svm.pkl",
 }
 
 # Holds the currently active model (default: random_forest)

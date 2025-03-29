@@ -4,10 +4,11 @@ Defines schemas for client data, predictions, and API responses.
 """
 
 # Standard library imports
-from pydantic import BaseModel, Field, validator
-from typing import Optional, List
 from enum import IntEnum
-from app.models import UserRole
+from typing import List, Optional
+
+from pydantic import BaseModel, Field
+
 
 # Enums for validation
 class Gender(IntEnum):
