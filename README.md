@@ -51,7 +51,62 @@ This also has an API file to interact with the front end, and logic in order to 
 
 -Get clients by case worker (Allow users to view which clients are assigned to a specific case worker.)
 
--Update client services (Allow users to update the service status of a case.)
+---
 
--Create case assignment (Allow authorized users to create a new case assignment.)
+## 🐳 Running the Backend with Docker
+
+You can run the backend API using Docker for easy deployment and cross-platform compatibility.
+
+### ▶️ Option 1: Run with Docker
+
+```bash
+docker build -t backend-app .
+docker run -p 8000:8000 backend-app
+```
+
+Open in browser: http://localhost:8000/docs
+
+---
+
+### ▶️ Option 2: Run with Docker Compose (Recommended)
+
+```bash
+docker compose up --build
+```
+
+To stop the service:
+
+```bash
+docker compose down
+```
+
+---
+
+## ⚙️ Environment Configuration
+
+Create a `.env` file in the root directory with the following content:
+
+```env
+DATABASE_URL=sqlite:///./test.db
+SECRET_KEY=your-very-secret-key
+DEBUG=True
+```
+
+This file is automatically used when running with Docker Compose.
+
+---
+
+## 🔄 Continuous Integration & Deployment (CI/CD)
+
+This project uses **GitHub Actions** for continuous integration and deployment.
+
+Workflows automatically perform the following tasks on every `push` or `pull_request` to `main`:
+
+- ✅ Install project dependencies
+- ✅ Run code formatters and linters (via [Ruff](https://github.com/astral-sh/ruff))
+- ✅ Run unit tests using [Pytest](https://docs.pytest.org/)
+- ✅ Build and run the Docker image to validate container functionality
+
+You can view workflow runs in the **Actions** tab of the GitHub repository.
+
 
