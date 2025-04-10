@@ -1,6 +1,8 @@
 # 📁 app/clients/service/model_router.py
 
 from fastapi import APIRouter, HTTPException
+from app.clients.service.logic import interpret_and_calculate
+from app.clients.schema import PredictionInput
 
 from app.clients.service import model_registry
 
@@ -24,3 +26,8 @@ def switch_model(model_name: str):
         return {"message": f"Switched to model: {model_name}"}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.post("/predictions")
+async def predict(data: PredictionInput):
+    return interpret_and_calculate(data.model_dump())
